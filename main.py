@@ -131,3 +131,17 @@ if __name__ == "__main__":
     client.start()
     print("✅ Bot ishga tushdi. Telegram orqali yozing.")
     client.run_until_disconnected()
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return "🤖 Bot ishlayapti (Render uchun port ochiq)."
+
+if __name__ == "__main__":
+    import os
+    port = int(os.environ.get("PORT", 5000))
+    client.start()
+    print("✅ Bot ishga tushdi. Telegram orqali xabar yuboring.")
+    app.run(host="0.0.0.0", port=port)
+
