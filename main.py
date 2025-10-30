@@ -1,6 +1,8 @@
 from telethon import TelegramClient, events
 import requests
 import json
+import threading
+from flask import Flask
 
 # 🔹 Telegram API ma'lumotlari
 api_id = 28030954
@@ -125,23 +127,24 @@ async def handler(event):
         await event.reply(reply)
 
 
-# 🔹 Dastur ishga tushadi
-if __name__ == "__main__":
-    print("🤖 Userbot ishga tushmoqda...")
-    client.start()
-    print("✅ Bot ishga tushdi. Telegram orqali yozing.")
-    client.run_until_disconnected()
-from flask import Flask
+# 🌐 Flask server (Render uchun)
 app = Flask(__name__)
 
 @app.route('/')
 def index():
     return "🤖 Bot ishlayapti (Render uchun port ochiq)."
 
-if __name__ == "__main__":
+
+# 🔹 Flask va Telegram userbotni parallel ishlatish
+def run_flask():
     import os
     port = int(os.environ.get("PORT", 5000))
-    client.start()
-    print("✅ Bot ishga tushdi. Telegram orqali xabar yuboring.")
     app.run(host="0.0.0.0", port=port)
 
+
+if __name__ == "__main__":
+    print("🤖 Userbot ishga tushmoqda...")
+    threading.Thread(target=run_flask).start()  # Flask server alohida oqimda
+    client.start()
+    print("✅ Bot ishga tushdi. Telegram orqali yozing.")
+    client.run_until_disconnected()
